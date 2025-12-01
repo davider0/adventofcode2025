@@ -26,21 +26,9 @@ const fileContent = fs.readFileSync("input.txt", "utf-8");
 const lines = fileContent.split("\n");
 for (const line of lines) {
   if (line.trim()) {
-    if (
-      parseInt(line.substring(1, line.length)) > 99 ||
-      parseInt(line.substring(1, line.length)) < 0
-    ) {
-      console.log(iActualDialStep);
-    }
     iActualDialStep = dialCalc(iActualDialStep, line);
-    if (
-      parseInt(line.substring(1, line.length)) > 99 ||
-      parseInt(line.substring(1, line.length)) < 0
-    ) {
-      console.log(line);
-      console.log(iActualDialStep);
-    }
   }
 }
 
 console.log(iPassword);
+
