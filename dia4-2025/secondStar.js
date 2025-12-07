@@ -12,7 +12,7 @@ String.prototype.replaceAt = function (index, replacement) {
   );
 };
 
-// función encuentra el mayor voltaje de una línea
+// función que encuentra el papel de regalo al que puede acceder el forklift o como se llame, y las reemplaza por X
 const iCountOfGiftPaperPerLine = (arrayLines, iIteration) => {
   const upper = iIteration != 0 ? arrayLines[iIteration - 1] : null;
   const lower =
@@ -35,6 +35,7 @@ const iCountOfGiftPaperPerLine = (arrayLines, iIteration) => {
   }
   return total;
 };
+// convierte, de un array de strings, todas las 'X' por '.'
 const convertXtoDot = (linesArray) => {
   return linesArray.map((line) => line.replace(/X/g, "."));
 };
@@ -44,6 +45,7 @@ const fileContent = fs.readFileSync("input.txt", "utf-8");
 // iterar globalmente hasta que no haya cambios
 var lines = fileContent.split("\n");
 var oldLines;
+// primero hace una iteración porque sino oldLines y lines serían iguales y el bucle no funcionaría
 do {
   oldLines = Array.from(lines);
 
@@ -55,3 +57,4 @@ do {
 } while (JSON.stringify(oldLines) !== JSON.stringify(lines));
 
 console.log(iCountOfPulledGiftPaper);
+
