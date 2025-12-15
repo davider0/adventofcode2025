@@ -55,9 +55,6 @@ function findNextSplitterRow(c, currentRow) {
     }
     return res;
 }
-
-// Algorithm:
-
 // Algoritmo:
 // 1. ordena todos los separadores de abajo hacia arriba
 // 2. para cada separador, mira hacia dónde van las ramas izquierda y derecha
@@ -71,13 +68,13 @@ for (const s of allSplitters) {
     const leftTargetRow = findNextSplitterRow(s.c - 1, s.r);
     let leftCount = 1n; // Default: exits manifold
     if (leftTargetRow !== null) {
-        // Hits a splitter below
+        // encuentra un separador abajo
         leftCount = splitterValues.get(getKey(leftTargetRow, s.c - 1));
     }
 
     // 2. camino derecha (col + 1)
     const rightTargetRow = findNextSplitterRow(s.c + 1, s.r);
-    let rightCount = 1n; // Default: exits manifold
+    let rightCount = 1n; // valor por defecto: existe variedad
     if (rightTargetRow !== null) {
         rightCount = splitterValues.get(getKey(rightTargetRow, s.c + 1));
     }
@@ -103,3 +100,4 @@ if (startPos) {
     console.error("Error: No starting position 'S' found in input.");
 
 }
+
