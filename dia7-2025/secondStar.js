@@ -1,15 +1,15 @@
 import fs from "fs";
 
-// Read and prepare data
+// lee el archivo
 const data = fs.readFileSync("input.txt", "utf-8");
 const lines = data.trimEnd().split("\n");
 
-// Parse the grid to find Start (S) and all Splitters (^)
-// We organize splitters by column for efficient vertical lookups.
-// cols[c] will contain a sorted list of row indices where splitters exist in column c.
+// parsea el grid para localizar los comienzos (S) y separadores (^)
+// se organizan los separadores por columnas para que el ordenador gaste menos luz
+// clos[c] contendrá una lista ordenada de índices de filas donde los separadores existen en la columna c
 let startPos = null;
 const cols = []; 
-const allSplitters = []; // To iterate in order
+const allSplitters = []; // para iterar en orden
 
 for (let r = 0; r < lines.length; r++) {
     const line = lines[r];
@@ -25,22 +25,21 @@ for (let r = 0; r < lines.length; r++) {
     }
 }
 
-// Map splitters by unique ID (row,col) to easily update their values later
-// or we can just update the objects in 'cols' if we link them correctly.
-// To keep it simple: we will use 'cols' to find the *Row Index*, 
-// then use a Map to store the calculated value for that specific splitter.
+// los separadores por ID (fila,col) para fácilmente actualizar sus valores más tarde
+// se usarán 'cols' para encontrar los índices de las filas
 const splitterValues = new Map();
 
-// Helper: Generate a unique key for the map
+// genera una única key por valor del mapa
 const getKey = (r, c) => `${r},${c}`;
 
-// Helper: Find the first splitter in column 'c' that is below 'row'
-// Returns the row index of the found splitter, or null if none (hits bottom)
+
+// encuentra el primer separador en la columna 'c' que está por debajo de 'fila'
+// devuelve el índice de la fila del separador encontrado, o null si no existe (al fondo)
 function findNextSplitterRow(c, currentRow) {
     const rows = cols[c];
-    if (!rows) return null; // Column is empty or out of bounds
+    if (!rows) return null; // la columna está vacía o fuera de alcance
 
-    // Binary search for the first row > currentRow
+    // búsqueda binaria
     let low = 0;
     let high = rows.length - 1;
     let res = null;
@@ -58,14 +57,17 @@ function findNextSplitterRow(c, currentRow) {
 }
 
 // Algorithm:
-// 1. Sort all splitters by Row Descending (Bottom-Up).
-// 2. For each splitter, look at where its Left and Right branches go.
-//    - If a branch hits another splitter, add that splitter's pre-calculated value.
-//    - If a branch hits the bottom (null), add 1.
+
+// Algoritmo:
+// 1. ordena todos los separadores de abajo hacia arriba
+// 2. para cada separador, mira hacia dónde van las ramas izquierda y derecha
+//    - si una rama acierta con otro separador, añade el valor precalculado de ese separador
+//    - si una rama acierta con null, añade 1
+
 allSplitters.sort((a, b) => b.r - a.r);
 
 for (const s of allSplitters) {
-    // 1. Trace Left Path (col - 1)
+    // 1. camino izquierda (col - 1)
     const leftTargetRow = findNextSplitterRow(s.c - 1, s.r);
     let leftCount = 1n; // Default: exits manifold
     if (leftTargetRow !== null) {
@@ -73,30 +75,31 @@ for (const s of allSplitters) {
         leftCount = splitterValues.get(getKey(leftTargetRow, s.c - 1));
     }
 
-    // 2. Trace Right Path (col + 1)
+    // 2. camino derecha (col + 1)
     const rightTargetRow = findNextSplitterRow(s.c + 1, s.r);
     let rightCount = 1n; // Default: exits manifold
     if (rightTargetRow !== null) {
         rightCount = splitterValues.get(getKey(rightTargetRow, s.c + 1));
     }
 
-    // Total timelines for this splitter
+    // total
     const total = leftCount + rightCount;
     splitterValues.set(getKey(s.r, s.c), total);
 }
 
-// Final Step: Trace from Start Position
+// paso final: rastreo desde el principio
 if (startPos) {
     const firstHitRow = findNextSplitterRow(startPos.c, startPos.r);
     
     if (firstHitRow === null) {
-        // Start beam goes straight to bottom without hitting anything
+        // no encuentra nada
         console.log("1");
     } else {
-        // Output the value of the first splitter we hit
+        // escribe por consola el primer valor que encontramos
         const result = splitterValues.get(getKey(firstHitRow, startPos.c));
         console.log(result.toString());
     }
 } else {
     console.error("Error: No starting position 'S' found in input.");
+
 }
