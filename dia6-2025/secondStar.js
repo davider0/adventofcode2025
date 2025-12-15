@@ -30,7 +30,7 @@ operations = operations.padEnd(maxLength, " ");
 let operation = "";
 let minorLength = 0;
 
-// el bucle empieza en el final, porque los cefalópodos leen de derecha a izquierda ()
+// el bucle empieza en el final, porque los cefalópodos leen de derecha a izquierda (igual que un funcionario su nómina)
 for (let i = operations.length - 1; i >= 0; i--) {
   const char = operations.charAt(i);
 
@@ -91,3 +91,4 @@ for (let i = operations.length - 1; i >= 0; i--) {
 
 // convertir de BigInt a String
 console.log(iResult.toString());
+
