@@ -1,5 +1,6 @@
 import fs from "fs";
 
+// área de un rectangulito entre dos puntos: nada de florituras
 const calcAreaRectangle = (x1, y1, x2, y2) => {
   return BigInt(Math.abs(Number(x2 - x1))) * BigInt(Math.abs(Number(y2 - y1)));
 };
